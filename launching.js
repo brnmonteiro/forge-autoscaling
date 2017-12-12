@@ -39,48 +39,36 @@ self.provision = function(event_detail, context, callback) {
 
             self.mount_provision(res.data);
             var server = res.data.server;
-            // server = {
+            //forge.deleteServer(server.id);
 
-            //     "id": 168607,
+            // server = {
+            //     "id": 168689,
             //     "credential_id": null,
-            //     "name": "forge_autoscaling_12120520",
+            //     "name": "forge_autoscaling_12121323",
             //     "size": "0GB",
             //     "region": "VPS",
             //     "php_version": "php71",
-            //     "ip_address": "54.83.178.106",
-            //     "private_ip_address": "172.31.2.104",
+            //     "ip_address": "54.197.179.146",
+            //     "private_ip_address": "172.31.15.44",
             //     "blackfire_status": null,
             //     "papertrail_status": null,
             //     "revoked": false,
-            //     "created_at": "2017-12-12 05:20:10",
+            //     "created_at": "2017-12-12 13:23:30",
             //     "is_ready": true,
             //     "network": []
-
             // };
 
             aws.createCloudWatchEventsRule(event_detail, context, server);
-            //criar trigger
-
-            //forge.deleteServer(server.id);
-
-            // var server = {
-            //     id: 168584,
-            // };
-
-
-
-
-            //forge.deleteServer(server.id);
-
 
         });
     });
 }
-self.provisionSite = function(event, callback) {
+self.provisionSite = function(event_detail, callback) {
+    var server = event_detail.server;
+    self.createSite(server, site => {
 
-    self.createSite(event.server, site => {
+        aws.disableCloudWatchEventsRule(event_detail);
 
-        aws.disableCloudWatchEventsRule(server);
 
         self.installGitRepository(server, site);
 
@@ -89,7 +77,7 @@ self.provisionSite = function(event, callback) {
         self.updateEnvFile(server, site, () => {
             self.updateSiteDeploymentScript(server, site, () => {
                 self.deploy(server, site, () => {
-                    aws.completeLifecycleAction(event.lifecycle_detail);
+                    aws.completeLifecycleAction(event_detail);
                 });
             });
         });
@@ -199,7 +187,7 @@ self.checkGitInstallation = function(server, site, callback) {
             }
         });
 
-    }, 10000);
+    }, 60000);
 }
 self.updateEnvFile = function(server, site, callback) {
 

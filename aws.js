@@ -46,7 +46,7 @@ self.createCloudWatchEventsRule = function(event_detail, context, server, callba
 
     cloudwatchevents.putRule({
         Name: 'ForgeAutoScaling-' + server.id,
-        ScheduleExpression: 'cron(0/2 * * * ? *)',
+        ScheduleExpression: 'cron(*/2 * * * ? *)',
 
         State: 'ENABLED'
     }, function(err, data) {
@@ -60,13 +60,13 @@ self.createCloudWatchEventsRule = function(event_detail, context, server, callba
 
     });
 }
-self.disableCloudWatchEventsRule = function(server) {
+self.disableCloudWatchEventsRule = function(event_detail) {
     console.log('-- Disabling CloudWatch Rule');
 
     var cloudwatchevents = new AWS.CloudWatchEvents();
 
     cloudwatchevents.disableRule({
-        Name: 'ForgeAutoScaling-' + server.id
+        Name: 'ForgeAutoScaling-' + event_detail.server.id
     }, function(err, data) {
         if (err) {
             console.log(err, err.stack); // an error occurred
@@ -88,8 +88,11 @@ self.createCloudWatchEventsTarget = function(parent_event_detail, context, serve
                 Arn: context.invokedFunctionArn,
                 Id: '1',
                 Input: JSON.stringify({
-                    server: server,
-                    lifecycle_detail: parent_event_detail
+                    source: 'forge.autoscaling',
+                    'detail-type': 'Forge Check Provision to Install Site - Cron',
+                    detail: Object.assign(parent_event_detail, {
+                        server: server
+                    })
                 })
             }
         ]

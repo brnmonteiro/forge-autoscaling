@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "axios": "^0.17.1",
     "dotenv": "^4.0.0",
     "simple-ssh": "^1.0.0"
   },

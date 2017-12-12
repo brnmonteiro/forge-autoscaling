@@ -37,26 +37,26 @@ self.provision = function(event_detail, context, callback) {
         self.createServer(public_ip, private_ip, ram, res => {
 
 
-            //self.mount_provision(res.data);
+            self.mount_provision(res.data);
             var server = res.data.server;
-            server = {
+            // server = {
 
-                "id": 168607,
-                "credential_id": null,
-                "name": "forge_autoscaling_12120520",
-                "size": "0GB",
-                "region": "VPS",
-                "php_version": "php71",
-                "ip_address": "54.83.178.106",
-                "private_ip_address": "172.31.2.104",
-                "blackfire_status": null,
-                "papertrail_status": null,
-                "revoked": false,
-                "created_at": "2017-12-12 05:20:10",
-                "is_ready": true,
-                "network": []
+            //     "id": 168607,
+            //     "credential_id": null,
+            //     "name": "forge_autoscaling_12120520",
+            //     "size": "0GB",
+            //     "region": "VPS",
+            //     "php_version": "php71",
+            //     "ip_address": "54.83.178.106",
+            //     "private_ip_address": "172.31.2.104",
+            //     "blackfire_status": null,
+            //     "papertrail_status": null,
+            //     "revoked": false,
+            //     "created_at": "2017-12-12 05:20:10",
+            //     "is_ready": true,
+            //     "network": []
 
-            };
+            // };
 
             aws.createCloudWatchEventsRule(event_detail, context, server);
             //criar trigger

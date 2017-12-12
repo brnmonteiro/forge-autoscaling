@@ -5,7 +5,7 @@ exports.handler = (event, context, callback) => {
     if (event.server !== undefined) {
         return require('./launching').provisionSite(event, callback);
     }
-    if (event.detail.hasOwnProperty('LifecycleTransition')) {
+    if (event.detail !== undefined && event.detail.hasOwnProperty('LifecycleTransition')) {
         if (event.detail.LifecycleTransition == 'autoscaling:EC2_INSTANCE_LAUNCHING') {
             return require('./launching').provision(event.detail, context, callback);
         }

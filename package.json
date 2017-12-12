@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "aws-sdk": "^2.167.0",
     "dotenv": "^4.0.0",
     "simple-ssh": "^1.0.0"
   },

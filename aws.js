@@ -75,7 +75,7 @@ self.disableCloudWatchEventsRule = function(event_detail) {
     });
 }
 
-self.createCloudWatchEventsTarget = function(parent_event_detail, context, server, callback) {
+self.createCloudWatchEventsTarget = function(event_detail, context, server, callback) {
     console.log('-- Attaching Target to Rule');
 
     var cloudwatchevents = new AWS.CloudWatchEvents();
@@ -85,11 +85,11 @@ self.createCloudWatchEventsTarget = function(parent_event_detail, context, serve
         Targets: [
             {
                 Arn: context.invokedFunctionArn,
-                Id: server.id,
+                Id: server.id.toString(),
                 Input: JSON.stringify({
                     source: 'forge.autoscaling',
                     'detail-type': 'Forge Check Provision to Install Site - Cron',
-                    detail: Object.assign(parent_event_detail, {
+                    detail: Object.assign(event_detail, {
                         server: server
                     })
                 })
@@ -114,7 +114,7 @@ self.addPermissionToLambda = function(context, source, server, callback) {
         FunctionName: context.invokedFunctionArn,
         Principal: "events.amazonaws.com",
         SourceArn: source,
-        StatementId: server.id
+        StatementId: server.id.toString()
     }, function(err, data) {
         if (err) {
             console.log(err, err.stack); // an error occurred

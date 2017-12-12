@@ -57,8 +57,10 @@ self.provision = function(event_detail, context, callback) {
             //     "is_ready": true,
             //     "network": []
             // };
+            setTimeout(function() {
+                aws.createCloudWatchEventsRule(event_detail, context, server);
+            }, 20000)
 
-            aws.createCloudWatchEventsRule(event_detail, context, server);
 
         });
     });
